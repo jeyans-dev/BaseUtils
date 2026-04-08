@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
@@ -21,6 +20,7 @@ public class LogUtil {
 
     // variable initialization
     private static final Logger logger = Logger.getLogger(LogUtil.class.getName());
+    private static FileHandler fileHandler;
 
     /**
      * Standard constructor for initializing by default credentials
@@ -33,10 +33,12 @@ public class LogUtil {
 
         try {
             // for folder creation if not existing
-            if(!Files.exists(path))
+            if(!Files.exists(path)) {
+                logger.info("Initiating Folder creation");
                 Files.createDirectories(path);
-
-            FileHandler fileHandler = new FileHandler(folder+getFileName());
+                logger.info("Folder Created Successfully");
+            }
+            fileHandler = new FileHandler(folder.getPath()+"/"+getFileName());
             fileHandler.setFormatter(new SimpleFormatter());
 
             logger.addHandler(fileHandler);
@@ -87,5 +89,11 @@ public class LogUtil {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMddyy-hhmmss");
         return "log-"+ LocalDateTime.now().format(dtf)+".log";
     }
+
+    public void close() {
+        if(fileHandler != null)
+            fileHandler.close();
+    }
+
 
 }
