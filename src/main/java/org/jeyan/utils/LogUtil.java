@@ -2,9 +2,11 @@ package org.jeyan.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -30,6 +32,10 @@ public class LogUtil {
         File folder = new File(path.toUri());
 
         try {
+            // for folder creation if not existing
+            if(!Files.exists(path))
+                Files.createDirectories(path);
+
             FileHandler fileHandler = new FileHandler(folder+getFileName());
             fileHandler.setFormatter(new SimpleFormatter());
 
@@ -79,7 +85,7 @@ public class LogUtil {
      */
     private String getFileName() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMddyy-hhmmss");
-        return "log-"+LocalDate.now().format(dtf)+".log";
+        return "log-"+ LocalDateTime.now().format(dtf)+".log";
     }
 
 }
